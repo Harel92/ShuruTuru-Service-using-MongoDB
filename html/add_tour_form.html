@@ -1,0 +1,101 @@
+
+<!doctype html>
+<html>
+    <head>
+        <title>ADD tour</title>
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/public/style.css">
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+        <script src="/js/tour_utils.js"></script>
+        <script> 
+            const set_guide = e => {
+                let g_name = $("#select_guide").val().split(" ").join('')
+                let g_id = $(`#${g_name}`).attr("class")
+                $("#select_guide").attr("class", g_id)
+            }
+            
+        </script>
+    </head>
+
+    <body class="gradient-custom">
+
+        <button onclick= "location.href = '\list';" class="btn btn-warning back"> Back </button>
+        <div class="col-sm-6 col-sm-offset-3">
+
+            <h1>Add new tour</h1>
+
+            <!-- OUR FORM -->
+            <form id="user_form" name="user_form" method="POST">
+
+                <!-- ID -->
+                <div id="name-group" class="form-group">
+                    <label for="ID">Tour Name</label>
+                    <input type="text" class="form-control" name="ID" id="ID" placeholder="Tour name" required>
+                    <!-- errors will go here -->
+                </div>
+
+                <!-- starting date -->
+                <div id="name-group" class="form-group">
+                    <label for="StartingDate">Starting date</label>
+                    <input type="date" class="form-control" name="StartingDate" id="StartingDate" required>
+                    <!-- errors will go here -->
+                </div>
+
+                <!-- Duration -->
+                <div id="name-group" class="form-group">
+                    <label for="Duration">Duration</label>
+                    <input type="number" class="form-control" name="Duration" placeholder="Numbers of days" id="Duration" min="1"required>
+                    <!-- errors will go here -->
+                </div>
+
+                <!-- Cost -->
+                <div id="name-group" class="form-group">
+                    <label for="Cost">Cost</label>
+                    <input type="text" class="form-control" name="Cost" id="Cost" placeholder="Numbers only" required>
+                    <!-- errors will go here -->
+                </div>
+
+                <!-- Guide -->
+                <div id="guide-group" class="form-group" style="margin: 5%;">
+                    <h3>Select Guide: </h3>
+                    <br><br>
+                    <label for="guideName">Guide name</label>
+                    <select id = "select_guide" onchange = "set_guide()"></select>
+                </div>
+                <button type="submit" class="btn btn-success submit">Submit <span class="fa fa-arrow-right"></span></button>
+
+            </form>
+
+        </div>
+        <script>
+            $(document).ready(function () {
+            
+                
+                let guide_list
+                $.ajax({
+                    url: "/guides",
+                    contentType: 'application/json',
+                    success: result => {
+                        guide_list = result
+                        guide_list.forEach((guide, index) => {
+                            const opt = $('<option/>', {id: guide.name.split(" ").join(''), text: guide.name, class: guide._id})
+                            if(index == 0) 
+                                $("#select_guide").attr("class", opt.attr("class"))
+                                
+                            $("#select_guide").append(opt)
+                        });     
+                    },
+                    error: function (err) {
+                        console.log("err", err);
+                    }
+                });
+
+                
+                
+                       
+            })
+        </script>
+    </body>
+
+</html>
